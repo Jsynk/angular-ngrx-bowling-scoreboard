@@ -1,0 +1,62 @@
+<ng-container *ngFor="let bg of (bowlingGames|async)!;let bgIndex=index;">
+    <div class="grid grid-cols-12 gap-1 font-bold text-lg pb-4" test="bowling-game">
+        <div class="col-span-12">
+            <div class="p-2 border-4 border-gray-500">
+                <div class="indicator">
+                    Gamename:
+                    <input class="bg-base-100 border border-gray-500 w-24 ml-2 px-2" [value]="bg.name" (input)="setBowlingGameName($event, bg.id)"/>
+                    <button class="indicator-item badge badge-primary" (click)="removeBowlingGame(bg.id)">Delete</button> 
+                </div>
+            </div>
+        </div>
+        <ng-container *ngFor="let player of bg.players;let playerIndex=index;">
+            <div class="col-span-4 xl:col-span-1 lg:col-span-2 md:col-span-3 border-4 border-gray-500" test="bowling-player">
+                <div class="p-2 border-b-4 border-gray-500">
+                    <div class="indicator w-full">
+                        Player
+                        <button class="indicator-item badge badge-primary" (click)="removePlayer(player.id, bg.id)">Delete</button> 
+                    </div>
+                </div>
+                <div class="p-2">
+                    <input class="bg-base-100 border border-gray-500 w-full p-2" [value]="player.name"
+                        (input)="setPlayerName($event, player.id, bg.id)"/>
+                </div>
+            </div>
+            <ng-container *ngFor="let frame of player.frames;let frameIndex=index;">
+                <div class="col-span-4 xl:col-span-1 lg:col-span-2 md:col-span-3 border-4 border-gray-500" test="bowling-frame">
+                    <div class="p-2 border-b-4 border-gray-500 text-center">{{frameIndex+1}}</div>
+                    <div class="pb-2 border-t-0 flex flex-row place-content-end">
+                        <div class="border-l-4 border-b-4 border-gray-500">
+                            <input class="bg-base-100 w-7 py-2 text-center" [value]="frame.first"
+                                (input)="setScore($event, frameIndex, playerIndex, bgIndex, 'first')"/>
+                        </div>
+                        <div class="border-l-4 border-b-4 border-gray-500">
+                            <input class="bg-base-100 w-7 py-2 text-center" [value]="frame.second"
+                                (input)="setScore($event, frameIndex, playerIndex, bgIndex, 'second')"/>
+                        </div>
+                        <div class="border-l-4 border-b-4 border-gray-500" *ngIf="frameIndex==9">
+                            <input class="bg-base-100 w-7 py-2 text-center" [value]="frame.third"
+                                (input)="setScore($event, frameIndex, playerIndex, bgIndex, 'third')"/>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="col-span-4 xl:col-span-1 lg:col-span-2 md:col-span-3 border-4 border-gray-500">
+                <div class="p-2 border-b-4 border-gray-500 text-center">Score</div>
+                <div class="p-2 text-center">{{player.score.score}}</div>
+            </div>
+        </ng-container>
+        <div class="pt-2 pt-0">
+            <div class="join">
+                <input class="input input-bordered join-item border-4" (input)="setNewPlayerName($event)" placeholder="Player Name" />
+                <button class="btn btn-primary join-item" (click)="addPlayer(newPlayerName(), bg.id)">+ Add Player</button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<div class="pt-2 font-bold text-lg">
+    <div class="join">
+        <input class="input input-bordered join-item border-4" (input)="setNewGameName($event)" placeholder="Game Name" />
+        <button class="btn btn-primary join-item" (click)="addBowlingGame(newGameName())">+ Add Game</button>
+    </div>
+</div>
